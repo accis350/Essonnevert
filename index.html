@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EssonneVert Location – Matériel de jardinage en Essonne</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #2d6a2d;
+    --vert-clair: #4a9e4a;
+    --vert-pale: #e8f5e8;
+    --vert-fonce: #1a3d1a;
+    --or: #c8a84b;
+    --blanc: #f9faf7;
+    --texte: #1c2b1c;
+    --gris: #6b7c6b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blanc);
+    color: var(--texte);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(249,250,247,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(45,106,45,0.12);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; font-weight: 900;
+    color: var(--vert);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .leaf { font-size: 1.6rem; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--texte);
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--vert-clair); }
+  .nav-cta {
+    background: var(--vert); color: white;
+    padding: 9px 22px; border-radius: 100px;
+    text-decoration: none; font-size: 0.9rem; font-weight: 600;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--vert-clair); transform: scale(1.03); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #1a3d1a 0%, #2d6a2d 45%, #3d8c3d 100%);
+    display: flex; align-items: center;
+    padding: 100px 2rem 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; width: 100%; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.85);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 900; color: white; line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 span { color: #a8d8a8; }
+  .hero-desc {
+    font-size: 1.05rem; color: rgba(255,255,255,0.75);
+    line-height: 1.7; margin-bottom: 2rem; font-weight: 300;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: white; color: var(--vert);
+    padding: 14px 28px; border-radius: 100px;
+    text-decoration: none; font-weight: 600; font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+  .btn-whatsapp {
+    background: #25D366; color: white;
+    padding: 14px 28px; border-radius: 100px;
+    text-decoration: none; font-weight: 600; font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-whatsapp:hover { transform: translateY(-2px); background: #20ba59; }
+
+  .hero-cards { display: flex; flex-direction: column; gap: 14px; }
+  .hero-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px; padding: 18px 22px;
+    display: flex; align-items: center; gap: 16px;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s;
+  }
+  .hero-card:hover { background: rgba(255,255,255,0.13); }
+  .hero-card-icon { font-size: 2rem; flex-shrink: 0; }
+  .hero-card-text h3 { color: white; font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+  .hero-card-text p { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+  .hero-card.featured { border-color: var(--or); background: rgba(200,168,75,0.12); }
+  .hero-card.featured .badge-pop {
+    background: var(--or); color: white;
+    font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 100px; margin-left: 8px; vertical-align: middle;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  /* SECTION COMMUNE */
+  section { padding: 80px 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--vert-clair);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 900; color: var(--texte); margin-bottom: 1rem;
+  }
+  .section-subtitle { font-size: 1rem; color: var(--gris); line-height: 1.7; max-width: 560px; }
+
+  /* LOCATION */
+  #location { background: var(--blanc); }
+  .tarifs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; margin-top: 3rem;
+  }
+  .tarif-card {
+    background: white;
+    border: 1.5px solid rgba(45,106,45,0.1);
+    border-radius: 20px; padding: 28px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .tarif-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(45,106,45,0.1);
+    border-color: var(--vert-clair);
+  }
+  .tarif-card.top {
+    border-color: var(--or);
+    background: linear-gradient(135deg, #fffdf5 0%, #fff 100%);
+  }
+  .top-badge {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--or); color: white;
+    font-size: 0.7rem; font-weight: 700; padding: 4px 12px;
+    border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tarif-icon { font-size: 2.4rem; margin-bottom: 14px; }
+  .tarif-name { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; color: var(--texte); }
+  .tarif-prices { display: flex; gap: 12px; }
+  .prix-pill {
+    flex: 1; text-align: center;
+    background: var(--vert-pale); border-radius: 12px; padding: 10px 8px;
+  }
+  .prix-pill .montant { font-size: 1.35rem; font-weight: 700; color: var(--vert); display: block; }
+  .prix-pill .duree { font-size: 0.75rem; color: var(--gris); font-weight: 500; }
+  .tarif-card.top .prix-pill { background: #fff8e7; }
+  .tarif-card.top .prix-pill .montant { color: #8a6c1e; }
+
+  /* MECANIQUE */
+  #mecanique { background: var(--vert-pale); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px; margin-top: 3rem;
+  }
+  .service-card {
+    background: white; border-radius: 16px; padding: 24px;
+    border: 1px solid rgba(45,106,45,0.08);
+    display: flex; align-items: flex-start; gap: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .service-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(45,106,45,0.1); }
+  .service-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: var(--vert-pale); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .service-text h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; color: var(--texte); }
+  .service-text p { font-size: 0.82rem; color: var(--gris); line-height: 1.5; }
+  .domicile-banner {
+    margin-top: 2rem;
+    background: var(--vert);
+    border-radius: 20px; padding: 28px 32px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    color: white;
+  }
+  .domicile-banner .icon { font-size: 2.5rem; flex-shrink: 0; }
+  .domicile-banner h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+  .domicile-banner p { font-size: 0.9rem; opacity: 0.8; }
+
+  /* ZONE */
+  #zone { background: white; }
+  .zone-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .zone-map {
+    background: var(--vert-pale); border-radius: 24px;
+    padding: 40px; text-align: center;
+    border: 2px dashed rgba(45,106,45,0.2);
+  }
+  .zone-map .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem; font-weight: 900;
+    color: var(--vert); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .zone-map p { color: var(--gris); font-size: 1rem; font-weight: 500; }
+  .zone-features { display: flex; flex-direction: column; gap: 16px; margin-top: 2rem; }
+  .zone-feat {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; background: var(--vert-pale);
+    border-radius: 12px;
+  }
+  .zone-feat .check {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--vert); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.8rem;
+  }
+  .zone-feat span { font-size: 0.9rem; font-weight: 500; color: var(--texte); }
+
+  /* BOUTIQUE (cachée) */
+  #boutique { background: var(--vert-fonce); display: none; }
+
+  /* CONTACT */
+  #contact { background: var(--vert-pale); }
+  .contact-box {
+    background: var(--vert);
+    border-radius: 28px; padding: 56px 48px;
+    text-align: center; max-width: 700px; margin: 3rem auto 0;
+  }
+  .contact-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: white; margin-bottom: 12px;
+  }
+  .contact-box p { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.7; }
+  .btn-wa-big {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: #25D366; color: white;
+    padding: 18px 40px; border-radius: 100px;
+    text-decoration: none; font-weight: 700; font-size: 1.1rem;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+  }
+  .btn-wa-big:hover { transform: translateY(-3px) scale(1.02); background: #20ba59; }
+  .contact-infos { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .contact-info-item { color: rgba(255,255,255,0.65); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--vert-fonce); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 24px 2rem;
+    font-size: 0.82rem;
+  }
+  footer strong { color: rgba(255,255,255,0.8); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-content { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-cards { display: none; }
+    .zone-content { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+    .contact-box { padding: 36px 24px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-content > * { animation: fadeUp 0.7s ease both; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo"><span class="leaf">🌿</span> EssonneVert</div>
+  <ul class="nav-links">
+    <li><a href="#location">Location</a></li>
+    <li><a href="#mecanique">Mécanique</a></li>
+    <li><a href="#zone">Zone</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/33678498075" class="nav-cta">📲 WhatsApp</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div>
+      <div class="hero-badge">📍 Essonne 91 — Livraison possible</div>
+      <h1>Location de matériel de <span>jardinage</span> en Essonne</h1>
+      <p class="hero-desc">Motoculteur, tondeuse, tronçonneuse… Louez le matériel qu'il vous faut, à la journée ou au week-end. Service mécanique disponible à domicile.</p>
+      <div class="hero-btns">
+        <a href="#location" class="btn-primary">Voir les tarifs</a>
+        <a href="https://wa.me/33678498075" class="btn-whatsapp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Contacter par WhatsApp
+        </a>
+      </div>
+    </div>
+    <div class="hero-cards">
+      <div class="hero-card featured">
+        <div class="hero-card-icon">🚜</div>
+        <div class="hero-card-text">
+          <h3>Motoculteur <span class="badge-pop">Le + demandé</span></h3>
+          <p>30€/jour · 50€/2 jours</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon">🌿</div>
+        <div class="hero-card-text">
+          <h3>Tondeuse</h3>
+          <p>30€/jour · 50€/2 jours</p>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-icon">🔧</div>
+        <div class="hero-card-text">
+          <h3>Service mécanique</h3>
+          <p>Révision · Réparation · À domicile</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="container">
+    <div class="section-label">📦 Nos équipements</div>
+    <h2 class="section-title">Location de matériel</h2>
+    <p class="section-subtitle">Tous nos équipements sont entretenus et prêts à l'emploi. Disponibles à la journée ou sur 2 jours pour plus de flexibilité.</p>
+    <div class="tarifs-grid">
+
+      <div class="tarif-card top" style="padding:0; overflow:hidden;">
+        <div class="top-badge" style="top:12px; right:12px; z-index:2;">⭐ Le + demandé</div>
+        <img src="motoculteur.jpeg" alt="Motoculteur Sterwins P50" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Motoculteur <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Sterwins P50</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Moteur thermique 4 temps — 179 cm³</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Puissance : 3,5 ch (3 600 W)</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Marche arrière mécanique</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Fonctionne à l'essence</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="padding:0; overflow:hidden;">
+        <img src="tondeuse.jpeg" alt="Tondeuse Sterwins" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Tondeuse <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Sterwins</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Moteur thermique 4 temps</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Traction assistée</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Bac de ramassage inclus</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="padding:0; overflow:hidden;">
+        <img src="taillehaie.jpeg" alt="Taille-haie Echo" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Taille-haie <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Echo</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Moteur thermique 2 temps</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Long manche télescopique</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Idéal grandes haies</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="padding:0; overflow:hidden;">
+        <img src="tronconneuse.jpeg" alt="Tronçonneuse Stihl" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Tronçonneuse <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Stihl</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Moteur thermique</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Guide-chaîne Rollomatic</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Frein de chaîne de sécurité</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="padding:0; overflow:hidden;">
+        <img src="souffleur.jpeg" alt="Souffleur Echo PB-770" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Souffleur <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Echo PB-770</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Souffleur à dos thermique</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Très haute puissance de soufflage</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Harnais confortable</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">20€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="padding:0; overflow:hidden;">
+        <img src="debroussailleuse.jpeg" alt="Débroussailleuse Echo" style="width:100%; height:180px; object-fit:cover; display:block;">
+        <div style="padding:22px;">
+          <div class="tarif-name">Débroussailleuse <span style="font-size:0.8rem; color:var(--gris); font-weight:400;">Echo</span></div>
+          <ul style="list-style:none; margin-bottom:16px; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Moteur thermique 2 temps</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Guidon double ergonomique</li>
+            <li style="font-size:0.82rem; color:var(--gris); display:flex; align-items:center; gap:6px;"><span style="color:var(--vert);">✓</span> Professionnel, usage intensif</li>
+          </ul>
+          <div class="tarif-prices">
+            <div class="prix-pill"><span class="montant">20€</span><span class="duree">1 jour</span></div>
+            <div class="prix-pill"><span class="montant">30€</span><span class="duree">2 jours</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MECANIQUE -->
+<section id="mecanique">
+  <div class="container">
+    <div class="section-label">🔧 Atelier</div>
+    <h2 class="section-title">Service mécanique</h2>
+    <p class="section-subtitle">Entretien, réparation et préparation de votre matériel de jardinage. Intervention possible à domicile dans tout l'Essonne.</p>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">🔍</div>
+        <div class="service-text">
+          <h3>Révision complète</h3>
+          <p>Contrôle général de votre matériel, changement huile, filtres, bougies.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🛠️</div>
+        <div class="service-text">
+          <h3>Réparation</h3>
+          <p>Diagnostic et remise en état de tout type de matériel de jardinage thermique ou électrique.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">⚔️</div>
+        <div class="service-text">
+          <h3>Affûtage des lames</h3>
+          <p>Affûtage professionnel des lames de tondeuse, taille-haie et tronçonneuse.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">❄️</div>
+        <div class="service-text">
+          <h3>Hivernage</h3>
+          <p>Préparation au stockage hivernal pour protéger votre matériel hors saison.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <div class="service-text">
+          <h3>Contrat d'entretien</h3>
+          <p>Contrat annuel personnalisé pour un entretien régulier et prioritaire de votre matériel.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="domicile-banner">
+      <div class="icon">🚐</div>
+      <div>
+        <h3>Intervention à domicile</h3>
+        <p>Nous nous déplaçons chez vous dans tout l'Essonne (91). Contactez-nous par WhatsApp pour prendre rendez-vous.</p>
+      </div>
+      <a href="https://wa.me/33678498075" style="margin-left:auto; background:white; color:var(--vert); padding:12px 24px; border-radius:100px; text-decoration:none; font-weight:600; font-size:0.9rem; white-space:nowrap; flex-shrink:0;">Prendre RDV</a>
+    </div>
+  </div>
+</section>
+
+<!-- ZONE -->
+<section id="zone">
+  <div class="container">
+    <div class="zone-content">
+      <div>
+        <div class="section-label">📍 Secteur</div>
+        <h2 class="section-title">Nous intervenons dans toute l'Essonne</h2>
+        <p class="section-subtitle">Notre base est en Essonne (91). Nous assurons la location et les interventions mécaniques dans tout le département.</p>
+        <div class="zone-features">
+          <div class="zone-feat"><div class="check">✓</div><span>Retrait du matériel sur place</span></div>
+          <div class="zone-feat"><div class="check">✓</div><span>Livraison possible sur demande</span></div>
+          <div class="zone-feat"><div class="check">✓</div><span>Intervention mécanique à domicile</span></div>
+          <div class="zone-feat"><div class="check">✓</div><span>Disponible 7j/7 sur WhatsApp</span></div>
+        </div>
+      </div>
+      <div class="zone-map">
+        <div class="big-num">91</div>
+        <p>Essonne<br><span style="font-size:0.85rem; opacity:0.6;">Île-de-France</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOUTIQUE (cachée) -->
+<section id="boutique">
+  <div class="container">
+    <div class="section-label">🛒 Vente</div>
+    <h2 class="section-title" style="color:white;">Matériel à vendre</h2>
+    <p class="section-subtitle" style="color:rgba(255,255,255,0.65);">Certains équipements sont également disponibles à l'achat. Contactez-nous pour connaître les disponibilités et les prix.</p>
+    <div class="tarifs-grid" style="margin-top:2rem;">
+      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
+        <div class="tarif-icon">✂️</div>
+        <div class="tarif-name" style="color:white;">Taille-haie</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
+      </div>
+      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
+        <div class="tarif-icon">🪚</div>
+        <div class="tarif-name" style="color:white;">Tronçonneuse</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
+      </div>
+      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
+        <div class="tarif-icon">💨</div>
+        <div class="tarif-name" style="color:white;">Souffleur</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
+      </div>
+      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
+        <div class="tarif-icon">🌾</div>
+        <div class="tarif-name" style="color:white;">Débroussailleuse</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="https://wa.me/33678498075" class="btn-wa-big">Renseignements vente</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">💬 Contact</div>
+    <h2 class="section-title">Réservez votre matériel</h2>
+    <p class="section-subtitle">Un message suffit ! Disponibilités, tarifs, devis mécanique… on répond rapidement.</p>
+    <div class="contact-box">
+      <h3>Contactez-nous sur WhatsApp</h3>
+      <p>C'est le moyen le plus rapide pour réserver votre matériel, obtenir un devis ou poser vos questions. Nous sommes disponibles 7j/7.</p>
+      <a href="https://wa.me/33678498075" class="btn-wa-big">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Écrire sur WhatsApp
+      </a>
+      <div class="contact-infos">
+        <span class="contact-info-item">📍 Essonne (91)</span>
+        <span class="contact-info-item">⏰ Disponible 7j/7</span>
+        <span class="contact-info-item">🚐 Intervention à domicile</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <strong>EssonneVert Location</strong> — Location de matériel de jardinage en Essonne (91)</p>
+  <p style="margin-top:6px;">Tous droits réservés · Essonne, Île-de-France</p>
+</footer>
+
+</body>
+</html>
