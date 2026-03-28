@@ -18,9 +18,7 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--blanc);
@@ -102,14 +100,15 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
-  .btn-whatsapp {
-    background: #25D366; color: white;
+  .btn-rdv {
+    background: var(--or); color: white;
     padding: 14px 28px; border-radius: 100px;
     text-decoration: none; font-weight: 600; font-size: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex; align-items: center; gap: 8px;
+    cursor: pointer; border: none;
   }
-  .btn-whatsapp:hover { transform: translateY(-2px); background: #20ba59; }
+  .btn-rdv:hover { transform: translateY(-2px); filter: brightness(1.08); }
 
   .hero-cards { display: flex; flex-direction: column; gap: 14px; }
   .hero-card {
@@ -178,7 +177,7 @@
   }
   .tarif-icon { font-size: 2.4rem; margin-bottom: 14px; }
   .tarif-name { font-size: 1.15rem; font-weight: 600; margin-bottom: 16px; color: var(--texte); }
-  .tarif-prices { display: flex; gap: 12px; }
+  .tarif-prices { display: flex; gap: 12px; margin-bottom: 16px; }
   .prix-pill {
     flex: 1; text-align: center;
     background: var(--vert-pale); border-radius: 12px; padding: 10px 8px;
@@ -187,6 +186,19 @@
   .prix-pill .duree { font-size: 0.75rem; color: var(--gris); font-weight: 500; }
   .tarif-card.top .prix-pill { background: #fff8e7; }
   .tarif-card.top .prix-pill .montant { color: #8a6c1e; }
+
+  .btn-reserver-card {
+    display: block; width: 100%; text-align: center;
+    background: var(--vert); color: white;
+    padding: 11px; border-radius: 10px;
+    font-size: 0.88rem; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .btn-reserver-card:hover { background: var(--vert-clair); transform: translateY(-1px); }
+  .tarif-card.top .btn-reserver-card { background: var(--or); }
+  .tarif-card.top .btn-reserver-card:hover { filter: brightness(1.1); }
 
   /* MECANIQUE */
   #mecanique { background: var(--vert-pale); }
@@ -220,6 +232,15 @@
   .domicile-banner .icon { font-size: 2.5rem; flex-shrink: 0; }
   .domicile-banner h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
   .domicile-banner p { font-size: 0.9rem; opacity: 0.8; }
+  .btn-rdv-banner {
+    margin-left: auto; background: white; color: var(--vert);
+    padding: 12px 24px; border-radius: 100px;
+    border: none; font-weight: 600; font-size: 0.9rem;
+    white-space: nowrap; flex-shrink: 0;
+    cursor: pointer; transition: transform 0.2s;
+    text-decoration: none;
+  }
+  .btn-rdv-banner:hover { transform: scale(1.04); }
 
   /* ZONE */
   #zone { background: white; }
@@ -250,9 +271,6 @@
   }
   .zone-feat span { font-size: 0.9rem; font-weight: 500; color: var(--texte); }
 
-  /* BOUTIQUE (cachée) */
-  #boutique { background: var(--vert-fonce); display: none; }
-
   /* CONTACT */
   #contact { background: var(--vert-pale); }
   .contact-box {
@@ -265,15 +283,16 @@
     font-size: 2rem; font-weight: 900; color: white; margin-bottom: 12px;
   }
   .contact-box p { color: rgba(255,255,255,0.75); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.7; }
-  .btn-wa-big {
+  .btn-rdv-contact {
     display: inline-flex; align-items: center; gap: 12px;
-    background: #25D366; color: white;
+    background: var(--or); color: white;
     padding: 18px 40px; border-radius: 100px;
-    text-decoration: none; font-weight: 700; font-size: 1.1rem;
-    transition: transform 0.2s, background 0.2s;
+    font-weight: 700; font-size: 1.1rem;
+    border: none; cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
     box-shadow: 0 6px 30px rgba(0,0,0,0.25);
   }
-  .btn-wa-big:hover { transform: translateY(-3px) scale(1.02); background: #20ba59; }
+  .btn-rdv-contact:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.08); }
   .contact-infos { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; }
   .contact-info-item { color: rgba(255,255,255,0.65); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
 
@@ -298,6 +317,211 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   .hero-content > * { animation: fadeUp 0.7s ease both; }
   .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
+
+  /* ===== MODAL RDV ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(26,61,26,0.55);
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeOverlay 0.25s ease; }
+  @keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: white;
+    border-radius: 24px;
+    max-width: 520px; width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s cubic-bezier(.22,1,.36,1);
+    position: relative;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(0,0,0,0.06); border: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: background 0.2s;
+  }
+  .modal-close:hover { background: rgba(0,0,0,0.12); }
+
+  .modal-header {
+    background: var(--vert-fonce);
+    padding: 28px 32px 24px;
+    border-radius: 24px 24px 0 0;
+    position: relative;
+  }
+  .modal-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: white; margin-bottom: 4px;
+  }
+  .modal-header p { color: rgba(255,255,255,0.65); font-size: 0.85rem; }
+
+  /* Steps */
+  .steps-bar {
+    display: flex; align-items: center;
+    padding: 18px 32px 0; gap: 0;
+  }
+  .step-dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 600;
+    border: 2px solid #cde3cd; color: var(--gris);
+    background: white; transition: all 0.3s; flex-shrink: 0; z-index: 1;
+  }
+  .step-dot.active { background: var(--vert); border-color: var(--vert); color: white; box-shadow: 0 0 0 4px rgba(45,106,45,0.15); }
+  .step-dot.done { background: var(--vert-clair); border-color: var(--vert-clair); color: white; }
+  .step-line { flex: 1; height: 2px; background: #cde3cd; margin: 0 4px; transition: background 0.3s; }
+  .step-line.done { background: var(--vert-clair); }
+
+  .step-labels {
+    display: flex; justify-content: space-between;
+    padding: 5px 26px 0; margin-bottom: 2px;
+  }
+  .step-label { font-size: 0.68rem; color: var(--gris); text-align: center; flex: 1; }
+  .step-label.active { color: var(--vert); font-weight: 600; }
+
+  .form-body { padding: 20px 32px 28px; }
+
+  .rdv-section { display: none; animation: fadeIn 0.3s ease; }
+  .rdv-section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+  .rdv-section-title {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gris);
+    margin-bottom: 14px;
+  }
+
+  /* Service cards */
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .svc-btn {
+    border: 2px solid #cde3cd; border-radius: 12px;
+    padding: 12px 10px; cursor: pointer;
+    background: white; text-align: left;
+    transition: all 0.2s; display: flex; flex-direction: column; gap: 3px;
+  }
+  .svc-btn:hover { border-color: var(--vert-clair); background: var(--vert-pale); }
+  .svc-btn.selected { border-color: var(--vert); background: var(--vert-pale); box-shadow: 0 0 0 3px rgba(45,106,45,0.12); }
+  .svc-btn .svc-ico { font-size: 1.2rem; }
+  .svc-btn .svc-nm { font-size: 0.82rem; font-weight: 600; color: var(--texte); line-height: 1.2; }
+  .svc-btn .svc-px { font-size: 0.74rem; color: var(--gris); }
+
+  /* Date/time */
+  .field { margin-bottom: 14px; }
+  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--texte); margin-bottom: 5px; }
+  input[type="date"], input[type="text"], input[type="tel"], input[type="email"], textarea {
+    width: 100%; padding: 10px 13px;
+    border: 2px solid #cde3cd; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    color: var(--texte); background: white;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+  input:focus, textarea:focus { border-color: var(--vert); box-shadow: 0 0 0 3px rgba(45,106,45,0.1); }
+  textarea { resize: none; height: 68px; }
+
+  .time-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+  .time-slot {
+    padding: 8px 5px; border: 2px solid #cde3cd;
+    border-radius: 9px; text-align: center;
+    font-size: 0.78rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; background: white; color: var(--texte);
+  }
+  .time-slot:hover { border-color: var(--vert-clair); background: var(--vert-pale); }
+  .time-slot.selected { background: var(--vert); border-color: var(--vert); color: white; }
+  .time-slot.taken { opacity: 0.35; cursor: not-allowed; }
+
+  .dur-row { display: flex; gap: 7px; margin-top: 10px; }
+  .dur-btn {
+    flex: 1; padding: 8px;
+    border: 2px solid #cde3cd; border-radius: 9px;
+    text-align: center; font-size: 0.78rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; background: white; color: var(--texte);
+  }
+  .dur-btn:hover { border-color: var(--vert-clair); background: var(--vert-pale); }
+  .dur-btn.selected { background: var(--vert); border-color: var(--vert); color: white; }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Summary */
+  .summary-box {
+    background: var(--vert-pale); border: 1.5px solid #cde3cd;
+    border-radius: 12px; padding: 16px; margin-bottom: 14px;
+  }
+  .summary-box h4 { font-size: 0.88rem; font-weight: 600; color: var(--vert-fonce); margin-bottom: 10px; }
+  .sum-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; padding: 5px 0;
+    border-bottom: 1px solid rgba(45,106,45,0.1);
+  }
+  .sum-row:last-child { border-bottom: none; }
+  .sum-row span:first-child { color: var(--gris); }
+  .sum-row span:last-child { font-weight: 600; color: var(--texte); }
+
+  .notice-box {
+    display: flex; align-items: flex-start; gap: 8px;
+    background: #fff8e1; border: 1.5px solid #ffd54f;
+    border-radius: 9px; padding: 10px 12px;
+    font-size: 0.78rem; color: #6d5600; margin-bottom: 14px;
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 8px; margin-top: 20px; }
+  .btn-modal {
+    flex: 1; padding: 12px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    font-weight: 600; cursor: pointer; border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .btn-back { background: white; border-color: #cde3cd; color: var(--gris); flex: 0 0 auto; width: 90px; }
+  .btn-back:hover { border-color: var(--vert-clair); color: var(--vert); }
+  .btn-next { background: var(--vert); color: white; box-shadow: 0 3px 12px rgba(45,106,45,0.25); }
+  .btn-next:hover { background: var(--vert-fonce); transform: translateY(-1px); }
+
+  .error-msg { color: #c0392b; font-size: 0.77rem; margin-top: 5px; display: none; }
+
+  /* Success */
+  .success-screen { display: none; padding: 40px 32px; text-align: center; animation: fadeIn 0.4s ease; }
+  .success-screen.active { display: block; }
+  .success-icon {
+    width: 64px; height: 64px; background: var(--vert-pale);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin: 0 auto 16px;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1) 0.1s both;
+  }
+  @keyframes popIn { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-screen h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--vert-fonce); margin-bottom: 8px; }
+  .success-screen p { font-size: 0.88rem; color: var(--gris); line-height: 1.6; }
+  .success-details {
+    background: var(--vert-pale); border-radius: 12px;
+    padding: 14px; margin: 16px 0;
+    font-size: 0.85rem; color: var(--texte); line-height: 1.9; text-align: left;
+  }
+  .btn-close-success {
+    background: var(--vert); color: white;
+    border: none; border-radius: 10px;
+    padding: 11px 28px; font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: 0.88rem; cursor: pointer;
+    margin-top: 6px; transition: background 0.2s;
+  }
+  .btn-close-success:hover { background: var(--vert-fonce); }
+
+  @media (max-width: 480px) {
+    .form-body { padding: 16px 20px 24px; }
+    .modal-header { padding: 22px 20px 18px; }
+    .steps-bar { padding: 14px 20px 0; }
+    .step-labels { padding: 4px 16px 0; }
+    .svc-grid { grid-template-columns: 1fr 1fr; }
+    .time-grid { grid-template-columns: repeat(3,1fr); }
+    .row-2 { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -311,7 +535,7 @@
     <li><a href="#zone">Zone</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="https://wa.me/33678498075" class="nav-cta">📲 WhatsApp</a>
+  <button class="nav-cta" onclick="openModal()">📅 Réserver</button>
 </nav>
 
 <!-- HERO -->
@@ -323,10 +547,7 @@
       <p class="hero-desc">Motoculteur, tondeuse, tronçonneuse… Louez le matériel qu'il vous faut, à la journée ou au week-end. Service mécanique disponible à domicile.</p>
       <div class="hero-btns">
         <a href="#location" class="btn-primary">Voir les tarifs</a>
-        <a href="https://wa.me/33678498075" class="btn-whatsapp">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Contacter par WhatsApp
-        </a>
+        <button class="btn-rdv" onclick="openModal()">📅 Réserver en ligne</button>
       </div>
     </div>
     <div class="hero-cards">
@@ -378,6 +599,7 @@
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Motoculteur Sterwins P50')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -394,6 +616,7 @@
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Tondeuse Sterwins')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -410,6 +633,7 @@
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Taille-haie Echo')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -426,6 +650,7 @@
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">50€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Tronçonneuse Stihl')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -442,6 +667,7 @@
             <div class="prix-pill"><span class="montant">20€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Souffleur Echo PB-770')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -458,6 +684,7 @@
             <div class="prix-pill"><span class="montant">20€</span><span class="duree">1 jour</span></div>
             <div class="prix-pill"><span class="montant">30€</span><span class="duree">2 jours</span></div>
           </div>
+          <button class="btn-reserver-card" onclick="openModal('Débroussailleuse Echo')">📅 Réserver cet engin</button>
         </div>
       </div>
 
@@ -472,7 +699,6 @@
     <h2 class="section-title">Service mécanique</h2>
     <p class="section-subtitle">Entretien, réparation et préparation de votre matériel de jardinage. Intervention possible à domicile dans tout l'Essonne.</p>
     <div class="services-grid">
-
       <div class="service-card">
         <div class="service-icon">🔍</div>
         <div class="service-text">
@@ -480,7 +706,6 @@
           <p>Contrôle général de votre matériel, changement huile, filtres, bougies.</p>
         </div>
       </div>
-
       <div class="service-card">
         <div class="service-icon">🛠️</div>
         <div class="service-text">
@@ -488,7 +713,6 @@
           <p>Diagnostic et remise en état de tout type de matériel de jardinage thermique ou électrique.</p>
         </div>
       </div>
-
       <div class="service-card">
         <div class="service-icon">⚔️</div>
         <div class="service-text">
@@ -496,7 +720,6 @@
           <p>Affûtage professionnel des lames de tondeuse, taille-haie et tronçonneuse.</p>
         </div>
       </div>
-
       <div class="service-card">
         <div class="service-icon">❄️</div>
         <div class="service-text">
@@ -504,7 +727,6 @@
           <p>Préparation au stockage hivernal pour protéger votre matériel hors saison.</p>
         </div>
       </div>
-
       <div class="service-card">
         <div class="service-icon">📋</div>
         <div class="service-text">
@@ -512,16 +734,14 @@
           <p>Contrat annuel personnalisé pour un entretien régulier et prioritaire de votre matériel.</p>
         </div>
       </div>
-
     </div>
-
     <div class="domicile-banner">
       <div class="icon">🚐</div>
       <div>
         <h3>Intervention à domicile</h3>
-        <p>Nous nous déplaçons chez vous dans tout l'Essonne (91). Contactez-nous par WhatsApp pour prendre rendez-vous.</p>
+        <p>Nous nous déplaçons chez vous dans tout l'Essonne (91). Prenez RDV directement en ligne.</p>
       </div>
-      <a href="https://wa.me/33678498075" style="margin-left:auto; background:white; color:var(--vert); padding:12px 24px; border-radius:100px; text-decoration:none; font-weight:600; font-size:0.9rem; white-space:nowrap; flex-shrink:0;">Prendre RDV</a>
+      <button class="btn-rdv-banner" onclick="openModal()">📅 Prendre RDV</button>
     </div>
   </div>
 </section>
@@ -538,7 +758,7 @@
           <div class="zone-feat"><div class="check">✓</div><span>Retrait du matériel sur place</span></div>
           <div class="zone-feat"><div class="check">✓</div><span>Livraison possible sur demande</span></div>
           <div class="zone-feat"><div class="check">✓</div><span>Intervention mécanique à domicile</span></div>
-          <div class="zone-feat"><div class="check">✓</div><span>Disponible 7j/7 sur WhatsApp</span></div>
+          <div class="zone-feat"><div class="check">✓</div><span>Réservation en ligne 24h/24</span></div>
         </div>
       </div>
       <div class="zone-map">
@@ -549,56 +769,21 @@
   </div>
 </section>
 
-<!-- BOUTIQUE (cachée) -->
-<section id="boutique">
-  <div class="container">
-    <div class="section-label">🛒 Vente</div>
-    <h2 class="section-title" style="color:white;">Matériel à vendre</h2>
-    <p class="section-subtitle" style="color:rgba(255,255,255,0.65);">Certains équipements sont également disponibles à l'achat. Contactez-nous pour connaître les disponibilités et les prix.</p>
-    <div class="tarifs-grid" style="margin-top:2rem;">
-      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
-        <div class="tarif-icon">✂️</div>
-        <div class="tarif-name" style="color:white;">Taille-haie</div>
-        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
-      </div>
-      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
-        <div class="tarif-icon">🪚</div>
-        <div class="tarif-name" style="color:white;">Tronçonneuse</div>
-        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
-      </div>
-      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
-        <div class="tarif-icon">💨</div>
-        <div class="tarif-name" style="color:white;">Souffleur</div>
-        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
-      </div>
-      <div class="tarif-card" style="background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1);">
-        <div class="tarif-icon">🌾</div>
-        <div class="tarif-name" style="color:white;">Débroussailleuse</div>
-        <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Disponible à l'achat</p>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:2rem;">
-      <a href="https://wa.me/33678498075" class="btn-wa-big">Renseignements vente</a>
-    </div>
-  </div>
-</section>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
-    <div class="section-label">💬 Contact</div>
+    <div class="section-label">📅 Réservation</div>
     <h2 class="section-title">Réservez votre matériel</h2>
-    <p class="section-subtitle">Un message suffit ! Disponibilités, tarifs, devis mécanique… on répond rapidement.</p>
+    <p class="section-subtitle">Réservez directement en ligne en quelques clics. Confirmation sous 2h.</p>
     <div class="contact-box">
-      <h3>Contactez-nous sur WhatsApp</h3>
-      <p>C'est le moyen le plus rapide pour réserver votre matériel, obtenir un devis ou poser vos questions. Nous sommes disponibles 7j/7.</p>
-      <a href="https://wa.me/33678498075" class="btn-wa-big">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Écrire sur WhatsApp
-      </a>
+      <h3>Réservation en ligne</h3>
+      <p>Choisissez votre engin, votre créneau et renseignez vos coordonnées. Nous confirmons votre réservation rapidement.</p>
+      <button class="btn-rdv-contact" onclick="openModal()">
+        📅 Réserver maintenant
+      </button>
       <div class="contact-infos">
         <span class="contact-info-item">📍 Essonne (91)</span>
-        <span class="contact-info-item">⏰ Disponible 7j/7</span>
+        <span class="contact-info-item">⏰ Résa 24h/24</span>
         <span class="contact-info-item">🚐 Intervention à domicile</span>
       </div>
     </div>
@@ -611,5 +796,313 @@
   <p style="margin-top:6px;">Tous droits réservés · Essonne, Île-de-France</p>
 </footer>
 
+<!-- ===== MODAL RDV ===== -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div class="modal-header">
+      <h2>🌿 Réservation en ligne</h2>
+      <p>EssonneVert · Location de matériel — Essonne (91)</p>
+    </div>
+
+    <div class="steps-bar">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">3</div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-dot" id="dot4">4</div>
+    </div>
+    <div class="step-labels">
+      <span class="step-label active" id="lbl1">Engin</span>
+      <span class="step-label" id="lbl2">Créneau</span>
+      <span class="step-label" id="lbl3">Coordonnées</span>
+      <span class="step-label" id="lbl4">Confirmation</span>
+    </div>
+
+    <div class="form-body">
+
+      <!-- STEP 1 -->
+      <div class="rdv-section active" id="s1">
+        <div class="rdv-section-title">Quel engin souhaitez-vous louer ?</div>
+        <div class="svc-grid">
+          <button class="svc-btn" onclick="selectSvc(this,'Motoculteur Sterwins P50')">
+            <span class="svc-ico">🚜</span>
+            <span class="svc-nm">Motoculteur Sterwins P50</span>
+            <span class="svc-px">30€/j · 50€/2j</span>
+          </button>
+          <button class="svc-btn" onclick="selectSvc(this,'Tondeuse Sterwins')">
+            <span class="svc-ico">🌿</span>
+            <span class="svc-nm">Tondeuse Sterwins</span>
+            <span class="svc-px">30€/j · 50€/2j</span>
+          </button>
+          <button class="svc-btn" onclick="selectSvc(this,'Taille-haie Echo')">
+            <span class="svc-ico">✂️</span>
+            <span class="svc-nm">Taille-haie Echo</span>
+            <span class="svc-px">30€/j · 50€/2j</span>
+          </button>
+          <button class="svc-btn" onclick="selectSvc(this,'Tronçonneuse Stihl')">
+            <span class="svc-ico">🪚</span>
+            <span class="svc-nm">Tronçonneuse Stihl</span>
+            <span class="svc-px">30€/j · 50€/2j</span>
+          </button>
+          <button class="svc-btn" onclick="selectSvc(this,'Souffleur Echo PB-770')">
+            <span class="svc-ico">💨</span>
+            <span class="svc-nm">Souffleur Echo PB-770</span>
+            <span class="svc-px">20€/j · 30€/2j</span>
+          </button>
+          <button class="svc-btn" onclick="selectSvc(this,'Débroussailleuse Echo')">
+            <span class="svc-ico">⚙️</span>
+            <span class="svc-nm">Débroussailleuse Echo</span>
+            <span class="svc-px">20€/j · 30€/2j</span>
+          </button>
+        </div>
+        <p class="error-msg" id="err1">Veuillez sélectionner un engin.</p>
+        <div class="btn-row">
+          <button class="btn-modal btn-next" onclick="goTo(2)">Continuer →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="rdv-section" id="s2">
+        <div class="rdv-section-title">Choisissez votre créneau</div>
+        <div class="field">
+          <label>📅 Date souhaitée</label>
+          <input type="date" id="pickDate">
+        </div>
+        <div class="field">
+          <label>🕐 Heure de prise en charge</label>
+          <div class="time-grid">
+            <div class="time-slot" onclick="selectTime(this)">08h00</div>
+            <div class="time-slot" onclick="selectTime(this)">09h00</div>
+            <div class="time-slot taken">10h00</div>
+            <div class="time-slot" onclick="selectTime(this)">11h00</div>
+            <div class="time-slot" onclick="selectTime(this)">13h00</div>
+            <div class="time-slot" onclick="selectTime(this)">14h00</div>
+            <div class="time-slot taken">15h00</div>
+            <div class="time-slot" onclick="selectTime(this)">16h00</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>⏱️ Durée de location</label>
+          <div class="dur-row">
+            <div class="dur-btn" onclick="selectDur(this,'1 jour')">1 jour</div>
+            <div class="dur-btn" onclick="selectDur(this,'2 jours')">2 jours</div>
+            <div class="dur-btn" onclick="selectDur(this,'Week-end')">Week-end</div>
+            <div class="dur-btn" onclick="selectDur(this,'1 semaine')">1 semaine</div>
+          </div>
+        </div>
+        <p class="error-msg" id="err2">Veuillez remplir la date, l'heure et la durée.</p>
+        <div class="btn-row">
+          <button class="btn-modal btn-back" onclick="goTo(1)">← Retour</button>
+          <button class="btn-modal btn-next" onclick="goTo(3)">Continuer →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="rdv-section" id="s3">
+        <div class="rdv-section-title">Vos coordonnées</div>
+        <div class="row-2">
+          <div class="field">
+            <label>Prénom *</label>
+            <input type="text" id="firstName" placeholder="Jean">
+          </div>
+          <div class="field">
+            <label>Nom *</label>
+            <input type="text" id="lastName" placeholder="Dupont">
+          </div>
+        </div>
+        <div class="field">
+          <label>Téléphone *</label>
+          <input type="tel" id="phone" placeholder="06 12 34 56 78">
+        </div>
+        <div class="field">
+          <label>Email *</label>
+          <input type="email" id="email" placeholder="jean.dupont@email.com">
+        </div>
+        <div class="field">
+          <label>Adresse / Notes (optionnel)</label>
+          <textarea id="notes" placeholder="Ex : adresse de livraison, code portail..."></textarea>
+        </div>
+        <p class="error-msg" id="err3">Veuillez remplir tous les champs obligatoires.</p>
+        <div class="btn-row">
+          <button class="btn-modal btn-back" onclick="goTo(2)">← Retour</button>
+          <button class="btn-modal btn-next" onclick="goTo(4)">Continuer →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="rdv-section" id="s4">
+        <div class="rdv-section-title">Récapitulatif</div>
+        <div class="summary-box">
+          <h4>📋 Votre réservation</h4>
+          <div class="sum-row"><span>Engin</span><span id="sum-svc">—</span></div>
+          <div class="sum-row"><span>Date</span><span id="sum-date">—</span></div>
+          <div class="sum-row"><span>Heure</span><span id="sum-time">—</span></div>
+          <div class="sum-row"><span>Durée</span><span id="sum-dur">—</span></div>
+          <div class="sum-row"><span>Client</span><span id="sum-name">—</span></div>
+          <div class="sum-row"><span>Téléphone</span><span id="sum-phone">—</span></div>
+        </div>
+        <div class="notice-box">
+          <span>📲</span>
+          <span>Nous vous confirmons votre réservation par SMS dans les 2h suivant votre demande.</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn-modal btn-back" onclick="goTo(3)">← Retour</button>
+          <button class="btn-modal btn-next" onclick="submitBooking()">✅ Confirmer</button>
+        </div>
+      </div>
+
+    </div><!-- /form-body -->
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✅</div>
+      <h3>Demande envoyée !</h3>
+      <p>Merci pour votre réservation. Nous vous confirmons votre créneau sous peu.</p>
+      <div class="success-details" id="successDetails"></div>
+      <p style="font-size:0.78rem; color:var(--gris);">Un SMS de confirmation vous sera envoyé rapidement.</p>
+      <button class="btn-close-success" onclick="closeModal()">Fermer</button>
+    </div>
+
+  </div><!-- /modal -->
+</div><!-- /overlay -->
+
+<script>
+  let rdv = { service:'', date:'', time:'', duration:'', firstName:'', lastName:'', phone:'', email:'', notes:'' };
+
+  // Set min date
+  document.getElementById('pickDate').min = new Date().toISOString().split('T')[0];
+
+  function openModal(preselect) {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (preselect) {
+      // Auto-select the service
+      document.querySelectorAll('.svc-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.querySelector('.svc-nm').textContent === preselect) {
+          btn.classList.add('selected');
+          rdv.service = preselect;
+        }
+      });
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(resetModal, 300);
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  function selectSvc(el, name) {
+    document.querySelectorAll('.svc-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    rdv.service = name;
+    document.getElementById('err1').style.display = 'none';
+  }
+
+  function selectTime(el) {
+    if (el.classList.contains('taken')) return;
+    document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+    rdv.time = el.textContent;
+    document.getElementById('err2').style.display = 'none';
+  }
+
+  function selectDur(el, dur) {
+    document.querySelectorAll('.dur-btn').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    rdv.duration = dur;
+  }
+
+  function goTo(step) {
+    if (step === 2 && !rdv.service) {
+      document.getElementById('err1').style.display = 'block'; return;
+    }
+    if (step === 3) {
+      rdv.date = document.getElementById('pickDate').value;
+      if (!rdv.date || !rdv.time || !rdv.duration) {
+        document.getElementById('err2').style.display = 'block'; return;
+      }
+    }
+    if (step === 4) {
+      rdv.firstName = document.getElementById('firstName').value.trim();
+      rdv.lastName = document.getElementById('lastName').value.trim();
+      rdv.phone = document.getElementById('phone').value.trim();
+      rdv.email = document.getElementById('email').value.trim();
+      rdv.notes = document.getElementById('notes').value.trim();
+      if (!rdv.firstName || !rdv.lastName || !rdv.phone || !rdv.email) {
+        document.getElementById('err3').style.display = 'block'; return;
+      }
+      const d = new Date(rdv.date + 'T12:00:00');
+      document.getElementById('sum-svc').textContent = rdv.service;
+      document.getElementById('sum-date').textContent = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+      document.getElementById('sum-time').textContent = rdv.time;
+      document.getElementById('sum-dur').textContent = rdv.duration;
+      document.getElementById('sum-name').textContent = rdv.firstName + ' ' + rdv.lastName;
+      document.getElementById('sum-phone').textContent = rdv.phone;
+    }
+    // Update dots
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById('dot'+i);
+      const lbl = document.getElementById('lbl'+i);
+      dot.classList.remove('active','done');
+      lbl.classList.remove('active');
+      if (i < step) { dot.classList.add('done'); dot.textContent = '✓'; }
+      else if (i === step) { dot.classList.add('active'); dot.textContent = i; lbl.classList.add('active'); }
+      else { dot.textContent = i; }
+      if (i <= 3) document.getElementById('line'+i).classList.toggle('done', i < step);
+    }
+    document.querySelectorAll('.rdv-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('s'+step).classList.add('active');
+    document.getElementById('modal').scrollTop = 0;
+  }
+
+  function submitBooking() {
+    document.querySelector('.form-body').style.display = 'none';
+    document.querySelector('.steps-bar').style.display = 'none';
+    document.querySelector('.step-labels').style.display = 'none';
+    const d = new Date(rdv.date + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+    document.getElementById('successDetails').innerHTML =
+      `<strong>🚜 ${rdv.service}</strong><br>` +
+      `📅 ${dateStr} à ${rdv.time}<br>` +
+      `⏱️ Durée : ${rdv.duration}<br>` +
+      `👤 ${rdv.firstName} ${rdv.lastName}<br>` +
+      `📱 ${rdv.phone}`;
+    document.getElementById('successScreen').classList.add('active');
+  }
+
+  function resetModal() {
+    document.querySelector('.form-body').style.display = 'block';
+    document.querySelector('.steps-bar').style.display = 'flex';
+    document.querySelector('.step-labels').style.display = 'flex';
+    document.getElementById('successScreen').classList.remove('active');
+    document.querySelectorAll('.rdv-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('s1').classList.add('active');
+    document.querySelectorAll('.svc-btn,.time-slot,.dur-btn').forEach(el => el.classList.remove('selected'));
+    ['firstName','lastName','phone','email','notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pickDate').value = '';
+    rdv = { service:'', date:'', time:'', duration:'', firstName:'', lastName:'', phone:'', email:'', notes:'' };
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById('dot'+i);
+      dot.classList.remove('active','done');
+      dot.textContent = i;
+      document.getElementById('lbl'+i).classList.remove('active');
+      if (i <= 3) document.getElementById('line'+i).classList.remove('done');
+    }
+    document.getElementById('dot1').classList.add('active');
+    document.getElementById('lbl1').classList.add('active');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
 </body>
 </html>
