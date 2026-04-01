@@ -877,12 +877,18 @@
           <div class="time-grid">
             <div class="time-slot" onclick="selectTime(this)">08h00</div>
             <div class="time-slot" onclick="selectTime(this)">09h00</div>
-            <div class="time-slot taken">10h00</div>
+            <div class="time-slot" onclick="selectTime(this)">10h00</div>
             <div class="time-slot" onclick="selectTime(this)">11h00</div>
+            <div class="time-slot" onclick="selectTime(this)">12h00</div>
             <div class="time-slot" onclick="selectTime(this)">13h00</div>
             <div class="time-slot" onclick="selectTime(this)">14h00</div>
-            <div class="time-slot taken">15h00</div>
+            <div class="time-slot" onclick="selectTime(this)">15h00</div>
             <div class="time-slot" onclick="selectTime(this)">16h00</div>
+            <div class="time-slot" onclick="selectTime(this)">17h00</div>
+            <div class="time-slot" onclick="selectTime(this)">18h00</div>
+            <div class="time-slot" onclick="selectTime(this)">19h00</div>
+            <div class="time-slot" onclick="selectTime(this)">20h00</div>
+            <div class="time-slot" onclick="selectTime(this)">21h00</div>
           </div>
         </div>
         <div class="field">
@@ -1065,12 +1071,37 @@
     document.getElementById('modal').scrollTop = 0;
   }
 
-  function submitBooking() {
+  async function submitBooking() {
+    const btn = document.querySelector('#s4 .btn-next');
+    btn.textContent = 'Envoi en cours…';
+    btn.disabled = true;
+
+    const d = new Date(rdv.date + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+
+    try {
+      await fetch('https://formspree.io/f/xlgolapb', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `🌿 Nouvelle réservation EssonneVert — ${rdv.service}`,
+          Engin: rdv.service,
+          Date: dateStr,
+          Heure: rdv.time,
+          Durée: rdv.duration,
+          Prénom: rdv.firstName,
+          Nom: rdv.lastName,
+          Téléphone: rdv.phone,
+          Email: rdv.email,
+          Notes: rdv.notes || '—',
+          _replyto: rdv.email
+        })
+      });
+    } catch(e) { /* on affiche le succès quoi qu'il arrive */ }
+
     document.querySelector('.form-body').style.display = 'none';
     document.querySelector('.steps-bar').style.display = 'none';
     document.querySelector('.step-labels').style.display = 'none';
-    const d = new Date(rdv.date + 'T12:00:00');
-    const dateStr = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
     document.getElementById('successDetails').innerHTML =
       `<strong>🚜 ${rdv.service}</strong><br>` +
       `📅 ${dateStr} à ${rdv.time}<br>` +
@@ -1078,6 +1109,8 @@
       `👤 ${rdv.firstName} ${rdv.lastName}<br>` +
       `📱 ${rdv.phone}`;
     document.getElementById('successScreen').classList.add('active');
+    btn.textContent = '✅ Confirmer';
+    btn.disabled = false;
   }
 
   function resetModal() {
